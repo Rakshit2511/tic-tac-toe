@@ -1,0 +1,39 @@
+<div class="container-fluid">
+    <div class="text-center text-white py-md-4 py-4">
+        <h3>TIC TAC TOE GAME</h3>
+    </div>
+</div>
+<div *ngIf="game" class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col border border-dark text-center" [ngClass]="{'bg-success': game.firstPlayer == game.currentPlayer, 
+                        'bg-danger': game.firstPlayer != game.currentPlayer}">{{game.firstPlayer}} :
+                            {{game.firstPlayerBoardValue}}</div>
+                        <div class="col border border-dark text-center" [ngClass]="{'bg-success': game.secondPlayer == game.currentPlayer, 
+                        'bg-danger': game.secondPlayer != game.currentPlayer}">{{game.secondPlayer}} :
+                            {{"X" === game.firstPlayerBoardValue ? "O" : "X"}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col border border-dark">
+                            <div class="row text-center" *ngFor="let row of game.board; index as i">
+                                <div class="col border border-dark" *ngFor="let col of row; index as j">
+                                    <img *ngIf="null == col" src="../../../../../assets/empty.jpg" class="img-rounded"
+                                        (click)="onclick(i, j)" alt="empty" width="100%" height="100%">
+                                    <img *ngIf="null != col" src="{{'../../../../../assets/'+ col + '.jpg'}}"
+                                        class="img-rounded" (click)="slotError()" alt="{{col}}" width="100%"
+                                        height="100%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <!-- {{message}} -->
+</div>

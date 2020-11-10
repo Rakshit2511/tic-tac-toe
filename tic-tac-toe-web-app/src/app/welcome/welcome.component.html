@@ -1,0 +1,94 @@
+<div class="container-fluid">
+    <div class="text-center text-white py-md-5 py-4">
+        <h3>TIC TAC TOE GAME</h3>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <div class="card-body">
+                    <img src="../../../assets/tic-tac-toe.jpg" width="100%" height="100%" alt="Tic Tac Toe">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <form class="card-body" [formGroup]="startGameForm" (ngSubmit)="onSubmit()">
+                    <h3 class="text-center">Please fill the details to start the game</h3>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <select class="form-control" formControlName="gameType">
+                                    <option value="HUMAN_VS_COMPUTER">Human Vs Computer</option>
+                                    <option value="HUMAN_VS_HUMAN">Human Vs Human</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="First Player Name"
+                                    formControlName="firstPlayer">
+                                <span
+                                    *ngIf="!startGameForm.get('firstPlayer').valid && startGameForm.get('firstPlayer').touched"
+                                    class="help-block">
+                                    <span *ngIf="startGameForm.get('firstPlayer').errors['required']">
+                                        First Player Name is required!
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Second Player Name"
+                                    formControlName="secondPlayer"
+                                    [readonly]="'HUMAN_VS_COMPUTER' === startGameForm.get('gameType').value">
+                                <span
+                                    *ngIf="!startGameForm.get('secondPlayer').valid && startGameForm.get('secondPlayer').touched"
+                                    class="help-block">
+                                    <span *ngIf="startGameForm.get('secondPlayer').errors['required']">
+                                        Second Player Name is required!
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <select class="form-control" formControlName="firstPlayerBoardValue">
+                                    <option>O</option>
+                                    <option>X</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Matrix size" formControlName="size"
+                                    type="number" min="3" max="6">
+                                <span *ngIf="!startGameForm.get('size').valid && startGameForm.get('size').touched"
+                                    class="help-block">
+                                    <span *ngIf="startGameForm.get('size').errors['required']">
+                                        Size is required!
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button [disabled]="!startGameForm.valid" class="btn btn-outline-danger btn-block"
+                                type="submit">Start
+                                Game</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="text-center text-white py-md-4 py-4">
+    </div>
+</div>
