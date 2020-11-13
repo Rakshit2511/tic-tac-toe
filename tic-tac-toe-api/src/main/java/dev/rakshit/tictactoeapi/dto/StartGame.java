@@ -1,6 +1,7 @@
 package dev.rakshit.tictactoeapi.dto;
 
 import dev.rakshit.tictactoeapi.models.enums.BoardValue;
+import dev.rakshit.tictactoeapi.models.enums.GameType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,9 @@ public class StartGame {
     @NotNull
     @ApiModelProperty(notes = "Board value given to first player. Can be O / X")
     private BoardValue firstPlayerBoardValue;
+    @NotNull
+    @ApiModelProperty(notes = "Type of game. Can be HUMAN_VS_HUMAN / HUMAN_VS_COMPUTER")
+    private GameType gameType;
     @NotNull
     @ApiModelProperty(notes = "Size of matrix for a game")
     private int size;

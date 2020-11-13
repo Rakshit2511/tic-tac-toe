@@ -7,8 +7,10 @@ import dev.rakshit.tictactoeapi.models.GameBoard;
 import dev.rakshit.tictactoeapi.models.Move;
 import dev.rakshit.tictactoeapi.models.enums.BoardValue;
 import dev.rakshit.tictactoeapi.models.enums.GameStatus;
+import dev.rakshit.tictactoeapi.models.enums.GameType;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class GameUtil {
 
@@ -34,7 +36,7 @@ public class GameUtil {
         if (!(y >= 0 && y < size)) {
             throw new InvalidTurnException(String.format("Invalid y-coordinate; Please enter a valid integer between 0 and %d", size));
         }
-        if (!gameBoard.isValueNull(x, y)) {
+        if (!gameBoard.isValueNull(coordinates)) {
             throw new InvalidTurnException("Slot already taken; try another value");
         }
     }
@@ -74,7 +76,7 @@ public class GameUtil {
      * @param move      Move to be added on game board.
      */
     public static void addMoveToBoard(GameBoard gameBoard, Move move) {
-        gameBoard.set(move.getBoardValue().name(), move.getBoardRow(), move.getBoardColumn());
+        gameBoard.set(move.getBoardValue().name(), Coordinates.builder().x(move.getBoardRow()).y(move.getBoardColumn()).build());
     }
 
     /**
@@ -94,7 +96,7 @@ public class GameUtil {
      * @param coordinates coordinates of the move.
      */
     public static void updateGameStatus(GameBoard gameBoard, Game game, Coordinates coordinates) {
-        if (gameBoard.isWin(coordinates.getX(), coordinates.getY())) {
+        if (gameBoard.isWin(coordinates)) {
             game.setWinnerPlayer(game.getCurrentPlayer());
             game.setGameStatus(GameStatus.OVER);
         }
@@ -103,4 +105,26 @@ public class GameUtil {
         }
     }
 
+    /**
+     * Gets coordinates player should chose to win the game.
+     *
+     * @param gameBoard game board of the game.
+     * @param game      game.
+     * @return Optional of coordinates player should chose to win the game and Optional.empty()
+     * if no such coordinates exists.
+     */
+    public static Optional<Coordinates> getRecommendedCoordinates(GameBoard gameBoard, Game game) {
+        return gameBoard.getRecommendedCoordinates(getTurnBoardValue(game));
+    }
+
+    /**
+     * Tells it it's computer's turn or not.
+     *
+     * @param game game.
+     * @return true if it's computer's turn false otherwise
+     */
+    public static boolean isComputersTurn(Game game) {
+        return GameType.HUMAN_VS_COMPUTER == game.getGameType() &&
+                !game.getFirstPlayer().equals(game.getCurrentPlayer());
+    }
 }

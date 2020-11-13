@@ -1,31 +1,41 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params, UrlSegment } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { StartGame } from 'src/app/models/startgame';
 import { GameBackendService } from 'src/app/service/game-backend.service';
 
 @Component({
-  selector: 'app-welcome',
-  templateUrl: './welcome.component.html',
-  styleUrls: ['./welcome.component.css']
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.css']
 })
-export class WelcomeComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
 
   startGameForm: FormGroup;
+  pageType: string;
+  urlSubscription: Subscription;
 
   constructor(private gameBackendService: GameBackendService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
+    this.pageType = this.route.snapshot.params["pageType"];
+    this.urlSubscription = this.route.url.subscribe((url: UrlSegment[]) => {
+      this.pageType = url[0].path;
+    });
     this.setForm();
   }
 
   onSubmit(): void {
     const startGame: StartGame = new StartGame(this.startGameForm.value.firstPlayer, this.startGameForm.value.secondPlayer,
       this.startGameForm.value.firstPlayerBoardValue, this.startGameForm.value.size, this.startGameForm.value.gameType);
-    console.log(startGame);
     this.gameBackendService.startGame(startGame).subscribe(game => {
       this.router.navigate(['', 'game', game.gameId]);
     })
+  }
+
+  play(): void {
+    this.router.navigate(['', 'play']);
   }
 
   setForm(): void {
@@ -41,6 +51,10 @@ export class WelcomeComponent implements OnInit {
         secondPlayer: 'HUMAN_VS_COMPUTER' === val ? 'Computer' : null
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.urlSubscription.unsubscribe();
   }
 
 }

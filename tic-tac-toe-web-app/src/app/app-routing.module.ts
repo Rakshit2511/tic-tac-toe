@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { GameComponent } from './game/game.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
   { path: 'game/:gameId', component: GameComponent },
-  { path: '**', component: WelcomeComponent },
+  { path: 'play', component: MainComponent },
+  { path: 'thankyou', component: MainComponent },
+  { path: '**', redirectTo: 'play' },
 ];
 
 @NgModule({

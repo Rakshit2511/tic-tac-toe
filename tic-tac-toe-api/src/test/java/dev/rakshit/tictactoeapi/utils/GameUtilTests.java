@@ -19,9 +19,8 @@ public class GameUtilTests {
     @Test
     public void testAssertTurnInvalidX() {
         GameBoard gameBoard = new GameBoard(SIZE);
-        Coordinates coordinates = new Coordinates(3, 3);
         InvalidTurnException exception = assertThrows(InvalidTurnException.class, () -> {
-            GameUtil.assertTurn(gameBoard, coordinates);
+            GameUtil.assertTurn(gameBoard, Coordinates.builder().x(3).y(3).build());
         });
         String expectedMessage = String.format("Invalid x-coordinate; Please enter a valid integer between 0 and %d", SIZE);
         String actualMessage = exception.getMessage();
@@ -31,9 +30,8 @@ public class GameUtilTests {
     @Test
     public void testAssertTurnInvalidY() {
         GameBoard gameBoard = new GameBoard(SIZE);
-        Coordinates coordinates = new Coordinates(0, 3);
         InvalidTurnException exception = assertThrows(InvalidTurnException.class, () -> {
-            GameUtil.assertTurn(gameBoard, coordinates);
+            GameUtil.assertTurn(gameBoard, Coordinates.builder().x(0).y(3).build());
         });
         String expectedMessage = String.format("Invalid y-coordinate; Please enter a valid integer between 0 and %d", SIZE);
         String actualMessage = exception.getMessage();
@@ -43,8 +41,8 @@ public class GameUtilTests {
     @Test
     public void testAssertTurnSlotNotAvailable() {
         GameBoard gameBoard = new GameBoard(SIZE);
-        gameBoard.set("O", 0, 0);
-        Coordinates coordinates = new Coordinates(0, 0);
+        Coordinates coordinates = Coordinates.builder().x(0).y(0).build();
+        gameBoard.set("O", coordinates);
         InvalidTurnException exception = assertThrows(InvalidTurnException.class, () -> {
             GameUtil.assertTurn(gameBoard, coordinates);
         });
@@ -80,18 +78,17 @@ public class GameUtilTests {
                 .currentPlayer("Rakshit")
                 .firstPlayerBoardValue(BoardValue.O);
         GameBoard gameBoard = new GameBoard(SIZE);
-        gameBoard.set("X", 0, 0);
-        gameBoard.set("X", 0, 1);
-        gameBoard.set("O", 0, 2);
-        gameBoard.set("O", 1, 0);
-        gameBoard.set("O", 1, 1);
-        gameBoard.set("X", 1, 2);
-        gameBoard.set("X", 2, 0);
-        gameBoard.set("O", 2, 1);
-        gameBoard.set("O", 2, 2);
+        gameBoard.set("X", Coordinates.builder().x(0).y(0).build());
+        gameBoard.set("X", Coordinates.builder().x(0).y(1).build());
+        gameBoard.set("O", Coordinates.builder().x(0).y(2).build());
+        gameBoard.set("O", Coordinates.builder().x(1).y(0).build());
+        gameBoard.set("O", Coordinates.builder().x(1).y(1).build());
+        gameBoard.set("X", Coordinates.builder().x(1).y(2).build());
+        gameBoard.set("X", Coordinates.builder().x(2).y(0).build());
+        gameBoard.set("O", Coordinates.builder().x(2).y(1).build());
+        gameBoard.set("O", Coordinates.builder().x(2).y(2).build());
         Game game = gameBuilder.gameStatus(GameStatus.IN_PROGRESS).build();
-        Coordinates coordinates = new Coordinates(0, 2);
-        GameUtil.updateGameStatus(gameBoard, game, coordinates);
+        GameUtil.updateGameStatus(gameBoard, game, Coordinates.builder().x(0).y(2).build());
         Game expectedGame = gameBuilder.gameStatus(GameStatus.OVER).build();
         assertThat(game).isEqualTo(expectedGame);
     }
@@ -105,11 +102,11 @@ public class GameUtilTests {
                 .currentPlayer("Rakshit")
                 .firstPlayerBoardValue(BoardValue.O);
         GameBoard gameBoard = new GameBoard(SIZE);
-        gameBoard.set("O", 0, 0);
-        gameBoard.set("O", 0, 1);
-        gameBoard.set("O", 0, 2);
+        gameBoard.set("O", Coordinates.builder().x(0).y(0).build());
+        gameBoard.set("O", Coordinates.builder().x(0).y(1).build());
+        gameBoard.set("O", Coordinates.builder().x(0).y(2).build());
         Game game = gameBuilder.gameStatus(GameStatus.IN_PROGRESS).build();
-        Coordinates coordinates = new Coordinates(0, 2);
+        Coordinates coordinates = Coordinates.builder().x(0).y(2).build();
         GameUtil.updateGameStatus(gameBoard, game, coordinates);
         Game expectedGame = gameBuilder.gameStatus(GameStatus.OVER).winnerPlayer("Rakshit").build();
         assertThat(game).isEqualTo(expectedGame);

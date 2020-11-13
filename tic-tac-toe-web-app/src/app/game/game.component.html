@@ -8,24 +8,34 @@
         <div class="col-md-3"></div>
         <div class="col-md-6">
             <div class="card p-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col border border-dark text-center" [ngClass]="{'bg-success': game.firstPlayer == game.currentPlayer, 
-                        'bg-danger': game.firstPlayer != game.currentPlayer}">{{game.firstPlayer}} :
-                            {{game.firstPlayerBoardValue}}</div>
-                        <div class="col border border-dark text-center" [ngClass]="{'bg-success': game.secondPlayer == game.currentPlayer, 
-                        'bg-danger': game.secondPlayer != game.currentPlayer}">{{game.secondPlayer}} :
-                            {{"X" === game.firstPlayerBoardValue ? "O" : "X"}}</div>
+                <div class="card-body py-auto">
+                    <div class="container-fluid" *ngIf="null == message">
+                        <div class="row">
+                            <div class="col border border-dark text-center" [ngClass]="{'bg-success': game.firstPlayer == game.currentPlayer, 
+                            'bg-danger': game.firstPlayer != game.currentPlayer}">{{game.firstPlayer}} :
+                                {{game.firstPlayerBoardValue}}</div>
+                            <div class="col border border-dark text-center" [ngClass]="{'bg-success': game.secondPlayer == game.currentPlayer, 
+                            'bg-danger': game.secondPlayer != game.currentPlayer}">{{game.secondPlayer}} :
+                                {{"X" === game.firstPlayerBoardValue ? "O" : "X"}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col border border-dark">
+                                <app-game-board [board]="game.board" (onClickEvent)="onClickEventHandler($event)">
+                                </app-game-board>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col border border-dark">
-                            <div class="row text-center" *ngFor="let row of game.board; index as i">
-                                <div class="col border border-dark" *ngFor="let col of row; index as j">
-                                    <img *ngIf="null == col" src="../../../../../assets/empty.jpg" class="img-rounded"
-                                        (click)="onclick(i, j)" alt="empty" width="100%" height="100%">
-                                    <img *ngIf="null != col" src="{{'../../../../../assets/'+ col + '.jpg'}}"
-                                        class="img-rounded" (click)="slotError()" alt="{{col}}" width="100%"
-                                        height="100%">
+                    <div class="container-fluid" *ngIf="null != message">
+                        <div class="row">
+                            <div class="col">
+                                <div class="jumbotron vertical-center">
+                                    <div class="container-fluid text-center border border-dark m-0 p-3">
+                                        <h2>{{message}}</h2>
+                                        <button class="btn btn-outline-success btn-block" (click)="play()">
+                                            Start New Game</button>
+                                        <button class="btn btn-outline-danger btn-block"
+                                            (click)="thankyou()">Quit</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -35,5 +45,4 @@
         </div>
         <div class="col-md-3"></div>
     </div>
-    <!-- {{message}} -->
 </div>

@@ -7,6 +7,7 @@ export interface Game {
     winnerPlayer: string;
     size: number;
     gameStatus: string;
+    gameType: string;
     board: string[][];
     lastUpdated: string
 }

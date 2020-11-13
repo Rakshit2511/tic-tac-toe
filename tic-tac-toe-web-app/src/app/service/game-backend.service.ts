@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Game } from '../models/game';
+import { Move } from '../models/move';
 import { StartGame } from '../models/startgame';
 import { Coordinate } from 'src/app/models/coordinate';
 
@@ -10,7 +11,7 @@ import { Coordinate } from 'src/app/models/coordinate';
 })
 export class GameBackendService {
 
-  url = "http://localhost:8080" + "/game/";
+  private baseUrl = 'http://localhost:8080/tic-tac-toe/api/v1/';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -19,19 +20,19 @@ export class GameBackendService {
   constructor(private http: HttpClient) { }
 
   startGame(startGame: StartGame): Observable<Game> {
-    return this.http.post<Game>(this.url + "start", startGame, this.httpOptions);
+    return this.http.post<Game>(this.baseUrl + "start", startGame, this.httpOptions);
   }
 
   playTurn(gameId: number, coordinate: Coordinate): Observable<Game> {
-    return this.http.post<Game>(this.url + gameId + "/play", coordinate, this.httpOptions);
+    return this.http.post<Game>(this.baseUrl + gameId + "/play", coordinate, this.httpOptions);
   }
 
-  getMoves(gameId: number): Observable<any> {
-    return this.http.get<any>(this.url + gameId + "/moves");
+  getMoves(gameId: number): Observable<Move> {
+    return this.http.get<Move>(this.baseUrl + gameId + "/moves");
   }
 
   getGame(gameId: number): Observable<Game> {
-    return this.http.get<Game>(this.url + gameId);
+    return this.http.get<Game>(this.baseUrl + gameId);
   }
 
 }

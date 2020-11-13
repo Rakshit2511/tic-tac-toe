@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Coordinate } from '../models/coordinate';
 import { Game } from '../models/game';
-import { StartGame } from '../models/startgame';
 import { GameBackendService } from '../service/game-backend.service';
 
 @Component({
@@ -13,11 +12,10 @@ import { GameBackendService } from '../service/game-backend.service';
 })
 export class GameComponent implements OnInit, OnDestroy {
 
-  constructor(private gameBackendService: GameBackendService, private route: ActivatedRoute) { }
+  constructor(private gameBackendService: GameBackendService, private route: ActivatedRoute, private router: Router) { }
 
-  message: string = "";
+  message: string;
   paramsSubscription: Subscription;
-  gameSubscription: Subscription;
   gameId: number;
   game: Game;
 
@@ -28,47 +26,48 @@ export class GameComponent implements OnInit, OnDestroy {
         this.gameId = params["gameId"];
       });
     this.gameBackendService.getGame(this.gameId).subscribe(game => {
-      console.log(this.gameId);
-      console.log(game);
-      this.game = game;
+      this.setGameAndMessage(game);
     })
-
-    // let startGame: StartGame = {
-    //   firstPlayer: "Rakshit",
-    //   secondPlayer: "Rachit",
-    //   firstPlayerBoardValue: "O",
-    //   size: 3
-    // }
-    // this.gameBackendService.startGame(startGame).subscribe(game => {
-    //   this.game = game;
-    //   console.log(game);
-    // })
   }
 
-  onclick(i: number, j: number) {
+  onClickEventHandler(coordinate: Coordinate) {
     if ("OVER" == this.game.gameStatus) {
       return;
     }
-    let coordinate: Coordinate = {
-      x: i,
-      y: j
-    }
+    this.playTurn(coordinate);
+  }
+
+  playTurn(coordinate: Coordinate) {
     this.gameBackendService.playTurn(this.game.gameId, coordinate).subscribe(game => {
-      this.game = game;
-      this.message = "OVER" == this.game.gameStatus ? null == this.game.winnerPlayer ? "It's a draw" : game.winnerPlayer + " won!" : "";
+      this.setGameAndMessage(game);
+      if ("OVER" != this.game.gameStatus && "HUMAN_VS_COMPUTER" == game.gameType && game.firstPlayer != game.currentPlayer) {
+        setTimeout(() => {
+          this.playTurn(null);
+        }, 500);
+      }
     })
   }
 
-  slotError() {
-    if ("OVER" == this.game.gameStatus) {
-      return;
+  setGameAndMessage(game: Game) {
+    this.game = game;
+    let message = "OVER" == this.game.gameStatus ? null == this.game.winnerPlayer ? "It's a draw!" : game.winnerPlayer + " won!" : null;
+    if (null != message) {
+      setTimeout(() => {
+        this.message = message;
+      }, 500);
     }
-    this.message = "Slot Not Available!";
+  }
+
+  play() {
+    this.router.navigate(['', 'play']);
+  }
+
+  thankyou() {
+    this.router.navigate(['', 'thankyou']);
   }
 
   ngOnDestroy() {
     this.paramsSubscription.unsubscribe();
-    this.gameSubscription.unsubscribe();
   }
 
 }

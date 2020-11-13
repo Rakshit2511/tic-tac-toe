@@ -2,6 +2,7 @@ package dev.rakshit.tictactoeapi.models;
 
 import dev.rakshit.tictactoeapi.models.enums.BoardValue;
 import dev.rakshit.tictactoeapi.models.enums.GameStatus;
+import dev.rakshit.tictactoeapi.models.enums.GameType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,6 +38,9 @@ public class Game {
     @Column(name = "game_status", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private GameStatus gameStatus;
+    @Column(name = "game_type", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private GameType gameType;
     @Column(name = "last_updated", nullable = false)
     private LocalDateTime lastUpdated;
 }

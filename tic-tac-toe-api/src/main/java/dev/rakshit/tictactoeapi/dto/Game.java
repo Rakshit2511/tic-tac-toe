@@ -3,6 +3,7 @@ package dev.rakshit.tictactoeapi.dto;
 import dev.rakshit.tictactoeapi.models.GameBoard;
 import dev.rakshit.tictactoeapi.models.enums.BoardValue;
 import dev.rakshit.tictactoeapi.models.enums.GameStatus;
+import dev.rakshit.tictactoeapi.models.enums.GameType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,8 @@ public class Game {
     private Integer size;
     @ApiModelProperty(notes = "Game status. Can be IN_PROGRESS / OVER")
     private GameStatus gameStatus;
+    @ApiModelProperty(notes = "Game type. Can be HUMAN_VS_HUMAN, / HUMAN_VS_COMPUTER")
+    private GameType gameType;
     @ApiModelProperty(notes = "board")
     private String[][] board;
     @ApiModelProperty(notes = "Last Updated")
@@ -47,6 +50,7 @@ public class Game {
         this.size = game.getSize();
         this.board = gameBoard.getMatrix();
         this.gameStatus = game.getGameStatus();
+        this.gameType = game.getGameType();
         this.lastUpdated = game.getLastUpdated();
     }
 

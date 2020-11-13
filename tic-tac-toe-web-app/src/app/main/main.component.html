@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-6">
             <div class="card p-4">
-                <form class="card-body" [formGroup]="startGameForm" (ngSubmit)="onSubmit()">
+                <form *ngIf="'play' == pageType" class="card-body" [formGroup]="startGameForm" (ngSubmit)="onSubmit()">
                     <h3 class="text-center">Please fill the details to start the game</h3>
                     <hr>
                     <div class="row">
@@ -84,6 +84,11 @@
                         </div>
                     </div>
                 </form>
+                <div *ngIf="'thankyou' == pageType" class="card-body">
+                    <h3 class="text-center">Thankyou for playing with us ! 😊</h3>
+                    <br>
+                    <button class="btn btn-outline-danger btn-block" (click)="play()">Play Game</button>
+                </div>
             </div>
         </div>
     </div>
